@@ -27,7 +27,7 @@ class layout extends Component
 
     private function processTitle(): string
     {
-        $base = strtoupper($this->title ?: 'Minhas Séries');
+        $base = mb_strtoupper($this->title ?: 'Minhas Séries');
         return $base . ' - Controle de Séries';
     }
 }

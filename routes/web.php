@@ -7,3 +7,7 @@ Route::get('/', function () {
 });
 
 Route::get('/series', [App\Http\Controllers\seriesController::class, 'index']);
+
+Route::get('/series/create', [App\Http\Controllers\seriesController::class, 'create'])->name('series.create');
+
+Route::post('/series', [App\Http\Controllers\seriesController::class, 'store'])->name('series.store');
