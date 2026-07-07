@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class seriesController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
         $listSeries = [
             'Breaking Bad',
@@ -51,7 +52,16 @@ class seriesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $titleSerie = $request->input('title_serie');
+        $serie = new \App\Models\Series();
+        $serie->title = $titleSerie;
+        $rs_insert = $serie->save();
+        
+        if( $rs_insert ) {
+            return redirect()->route('series.index');
+        } else {
+            return redirect()->back()->withInput();
+        }
     }
 
     /**
