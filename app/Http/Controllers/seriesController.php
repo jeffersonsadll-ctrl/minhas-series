@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Series;
 
 class seriesController extends Controller
 {
@@ -12,28 +13,10 @@ class seriesController extends Controller
      */
     public function index()
     {
-        $listSeries = [
-            'Breaking Bad',
-            'Game of Thrones',
-            'The Office',
-            'Stranger Things',
-            'The Crown',
-            'The Mandalorian',
-            'Chernobyl',
-            'Sherlock',
-            'The Witcher',
-            'Peaky Blinders',
-            'Dark',
-            'Ozark',
-            'The Boys',
-            'Money Heist',
-            'Narcos',
-            'The Last of Us',
-            'Succession',
-            'The Marvelous Mrs. Maisel',
-            'Mindhunter',
-            'Dexter'
-        ];
+        $listSeries = Series::query()
+            ->select('title', 'id')
+            ->orderBy('title', 'asc')
+            ->get();
 
         return view('series.index')
             ->with('listSeries', $listSeries);
@@ -52,11 +35,8 @@ class seriesController extends Controller
      */
     public function store(Request $request)
     {
-        $titleSerie = $request->input('title_serie');
-        $serie = new \App\Models\Series();
-        $serie->title = $titleSerie;
-        $rs_insert = $serie->save();
-        
+        $rs_insert = Series::create($request->all());
+
         if( $rs_insert ) {
             return redirect()->route('series.index');
         } else {
@@ -93,6 +73,7 @@ class seriesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Series::destroy($id);
+        return redirect()->route('series.index');
     }
 }
