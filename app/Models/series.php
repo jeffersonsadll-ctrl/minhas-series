@@ -14,4 +14,9 @@ class Series extends Model
     protected $fillable = [
         'title',
     ];
+
+    public function temporadas()
+    {
+        return $this->hasMany(Temporadas::class, 'series_id');
+    }
 }
