@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\SeriesFormRequest;
 use Illuminate\Support\Facades\DB;
 use App\Models\Series;
 
@@ -11,15 +12,18 @@ class seriesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $listSeries = Series::query()
             ->select('title', 'id')
             ->orderBy('title', 'asc')
             ->get();
 
+        $message_success = $request->session()->get('message.success');
+
         return view('series.index')
-            ->with('listSeries', $listSeries);
+            ->with('listSeries', $listSeries)
+            ->with('message_success', $message_success);
     }
 
     /**
@@ -33,9 +37,11 @@ class seriesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(SeriesFormRequest $request)
     {
         $rs_insert = Series::create($request->all());
+
+        $request->session()->flash('message.success', "Série '{$rs_insert->title}' adicionada com sucesso!");
 
         if( $rs_insert ) {
             return redirect()->route('series.index');
@@ -55,25 +61,44 @@ class seriesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(int $id)
     {
-        //
+        $serie = Series::find($id);
+        
+        if( !$serie ) {
+            return redirect()->route('series.index');
+        }
+
+        return view('series.edit')->with('serie', $serie);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(SeriesFormRequest $request, int $id)
     {
-        //
+        $serie = Series::find($id);
+        
+        if( !$serie ) {
+            return redirect()->route('series.index');
+        }
+
+        $serie->update($request->all());
+
+        $request->session()->flash('message.success', "Série '{$serie->title}' atualizada com sucesso!");
+
+        return redirect()->route('series.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(int $id, Request $request)
     {
         Series::destroy($id);
+
+        $request->session()->flash('message.success', "Série removida com sucesso!");
+
         return redirect()->route('series.index');
     }
 }
