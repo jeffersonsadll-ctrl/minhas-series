@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('temporadas_id')->constrained('temporadas');
             $table->unsignedTinyInteger('numero_episodio');
-            $table->string('titulo');
+            $table->string('titulo')->nullable();
             $table->text('descricao')->nullable();
         });
     }

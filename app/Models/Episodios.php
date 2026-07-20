@@ -10,6 +10,12 @@ class Episodios extends Model
     use HasFactory;
 
     public $timestamps = false;
+    protected $fillable = [
+        'numero_episodio',
+        'titulo',
+        'descricao',
+    ];
+    protected $table = 'episodios';
 
     public function temporadas()
     {
