@@ -14,3 +14,7 @@ Route::controller(App\Http\Controllers\seriesController::class)->group(function 
     Route::post('/series', 'store')->name('series.store');
     Route::delete('/series/destroy/{id}', 'destroy')->name('series.destroy')->whereNumber('id', '[0-9]+');
 });
+
+Route::controller(App\Http\Controllers\temporadasController::class)->group(function (){
+    Route::get('/series/{id}/temporadas', 'index')->name('temporadas.index')->whereNumber('id', '[0-9]+');
+});
