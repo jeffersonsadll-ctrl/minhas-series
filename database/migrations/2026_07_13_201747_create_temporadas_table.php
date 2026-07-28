@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('temporadas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('series_id')->constrained('series');
+            $table->foreignId('series_id')->constrained('series')->cascadeOnDelete();
             $table->unsignedTinyInteger('numero_temporada');
             $table->timestamps();
         });

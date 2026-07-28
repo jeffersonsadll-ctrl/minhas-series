@@ -39,21 +39,33 @@ class seriesController extends Controller
      */
     public function store(SeriesFormRequest $request)
     {
-        $serie = Series::create($request->all());
+        try{
 
-        for( $i = 1; $i <= $request->temporadas; $i++ ) {
-            $temporada = $serie->temporadas()->create([
-                'numero_temporada' => $i
-            ]);
+            DB::beginTransaction();
+            $serie = Series::create($request->all());
 
-            for( $j = 1; $j <= $request->episodios; $j++ ) {
-                $temporada->episodios()->create([
-                    'numero_episodio' => $j
+            for( $i = 1; $i <= $request->temporadas; $i++ ) {
+                $temporada = $serie->temporadas()->create([
+                    'numero_temporada' => $i
                 ]);
-            }
-        }
 
-        $request->session()->flash('message.success', "Série '{$serie->title}' adicionada com sucesso!");
+                for( $j = 1; $j <= $request->episodios; $j++ ) {
+                    $temporada->episodios()->create([
+                        'numero_episodio' => $j,
+                        'descricao' => "Episódio {$j} da temporada {$i}"
+                    ]);
+                }
+            }
+
+            $request->session()->flash('message.success', "Série '{$serie->title}' adicionada com sucesso!");
+            DB::commit();
+
+        }catch(\Exception $e) {
+
+            DB::rollBack();
+            $request->session()->flash('message.error', "Erro ao adicionar a série: {$e->getMessage()}");
+            $serie = null;
+        }
 
         if( $serie ) {
             return redirect()->route('series.index');
@@ -107,9 +119,17 @@ class seriesController extends Controller
      */
     public function destroy(int $id, Request $request)
     {
-        Series::destroy($id);
+        try{
 
-        $request->session()->flash('message.success', "Série removida com sucesso!");
+            Series::destroy($id);    
+
+            $request->session()->flash('message.success', "Série removida com sucesso!");
+
+        }catch(\Exception $e) {
+
+            $request->session()->flash('message.error', "Erro ao remover a série: {$e->getMessage()}");
+
+        }
 
         return redirect()->route('series.index');
     }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('episodios', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('temporadas_id')->constrained('temporadas');
+            $table->foreignId('temporadas_id')->constrained('temporadas')->cascadeOnDelete();
             $table->unsignedTinyInteger('numero_episodio');
             $table->string('titulo')->nullable();
             $table->text('descricao')->nullable();
