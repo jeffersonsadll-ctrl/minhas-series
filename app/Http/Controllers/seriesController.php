@@ -3,12 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Repositories\SeriesInterface;
 use App\Http\Requests\SeriesFormRequest;
-use Illuminate\Support\Facades\DB;
 use App\Models\Series;
 
 class seriesController extends Controller
 {
+
+    public function __construct(private SeriesInterface $repository)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -39,33 +44,7 @@ class seriesController extends Controller
      */
     public function store(SeriesFormRequest $request)
     {
-        try{
-
-            DB::beginTransaction();
-            $serie = Series::create($request->all());
-
-            for( $i = 1; $i <= $request->temporadas; $i++ ) {
-                $temporada = $serie->temporadas()->create([
-                    'numero_temporada' => $i
-                ]);
-
-                for( $j = 1; $j <= $request->episodios; $j++ ) {
-                    $temporada->episodios()->create([
-                        'numero_episodio' => $j,
-                        'descricao' => "Episódio {$j} da temporada {$i}"
-                    ]);
-                }
-            }
-
-            $request->session()->flash('message.success', "Série '{$serie->title}' adicionada com sucesso!");
-            DB::commit();
-
-        }catch(\Exception $e) {
-
-            DB::rollBack();
-            $request->session()->flash('message.error', "Erro ao adicionar a série: {$e->getMessage()}");
-            $serie = null;
-        }
+        $serie = $this->repository->add($request);
 
         if( $serie ) {
             return redirect()->route('series.index');
