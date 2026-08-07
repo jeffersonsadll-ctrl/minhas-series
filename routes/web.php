@@ -18,3 +18,8 @@ Route::controller(App\Http\Controllers\seriesController::class)->group(function 
 Route::controller(App\Http\Controllers\temporadasController::class)->group(function (){
     Route::get('/series/{id}/temporadas', 'index')->name('temporadas.index')->whereNumber('id', '[0-9]+');
 });
+
+Route::controller(App\Http\Controllers\episodiosController::class)->group(function (){
+    Route::get('/temporada/{id}/episodios', 'index')->name('episodios.index')->whereNumber('id', '[0-9]+');
+    Route::post('/temporada/{id}/episodios', 'assistido')->name('episodios.assistido')->whereNumber('id', '[0-9]+');
+});
