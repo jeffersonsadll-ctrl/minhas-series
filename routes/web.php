@@ -21,5 +21,5 @@ Route::controller(App\Http\Controllers\temporadasController::class)->group(funct
 
 Route::controller(App\Http\Controllers\episodiosController::class)->group(function (){
     Route::get('/temporada/{id}/episodios', 'index')->name('episodios.index')->whereNumber('id', '[0-9]+');
-    Route::post('/temporada/{id}/episodios', 'assistido')->name('episodios.assistido')->whereNumber('id', '[0-9]+');
+    Route::post('/temporada/{id}/assistido', 'assistido')->name('episodios.assistido')->whereNumber('id', '[0-9]+');
 });

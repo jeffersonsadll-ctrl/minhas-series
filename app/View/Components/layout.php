@@ -22,7 +22,8 @@ class layout extends Component
     public function render(): View|Closure|string
     {
         return view('components.layout')
-            ->with('titleProcessada', $this->processTitle());
+            ->with('titleProcessada', $this->processTitle())
+            ->with('mensagem', session('mensagem.sucesso'));
     }
 
     private function processTitle(): string

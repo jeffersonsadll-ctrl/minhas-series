@@ -21,4 +21,5 @@ class temporadasController extends Controller
             ->with('serie', $serie)
             ->with('temporadas', $serie->temporadas);
     }
+
 }

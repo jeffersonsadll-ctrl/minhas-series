@@ -14,7 +14,8 @@ class episodiosController extends Controller
 
         return view('episodios.index', [
             'episodios' => $temporada->episodios,
-            'temporada' => $temporada
+            'temporada' => $temporada,
+            'mensagem' => session('mensagem.sucesso')
         ]);
     }
 
@@ -25,9 +26,8 @@ class episodiosController extends Controller
         $episodio->save();
 
         $temporada = Temporadas::find($request->input('temporada_id'));
-        return view('episodios.index', [
-            'episodios' => $temporada->episodios,
-            'temporada' => $temporada
-        ]);
+
+        return to_route('episodios.index', ['id' => $temporada->id])
+            ->with('mensagem.sucesso', 'Episódio atualizado com sucesso!');
     }
 }

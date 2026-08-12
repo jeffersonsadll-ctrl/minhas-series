@@ -6,7 +6,7 @@
                     Temporada {{ $temporada->numero_temporada }}
                 </a>
                 <span class="badge bg-secondary">
-                    {{ $temporada->episodios->count() }}
+                   {{ $temporada->numeroEpisodiosAssistidos()['episodiosAssistidos'] }} / {{ $temporada->numeroEpisodiosAssistidos()['totalEpisodios'] }}
                 </span>
             </li>
         @endforeach

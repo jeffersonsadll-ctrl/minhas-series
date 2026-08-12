@@ -9,7 +9,11 @@
         <main class="container py-4">
             <h1 class="mb-4">{{ $titleProcessada ?? '' }}</h1>
 
-            @if ($errors->any())
+            @if( isset($mensagem) )
+                <div class="alert alert-success">
+                    {{ $mensagem }}
+                </div>
+            @elseif ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
                         @foreach ($errors->all() as $error)
