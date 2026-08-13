@@ -9,19 +9,19 @@ Route::get('/', function () {
 Route::controller(App\Http\Controllers\seriesController::class)->group(function () {
     Route::get('/series', 'index')->name('series.index')->middleware('autenticador');
     Route::get('/series/create', 'create')->name('series.create')->middleware('autenticador');
-    Route::get('/series/edit/{id}', 'edit')->name('series.edit')->whereNumber('id', '[0-9]+')->middleware('autenticador');
-    Route::put('/series/update/{id}', 'update')->name('series.update')->whereNumber('id', '[0-9]+')->middleware('autenticador');
+    Route::get('/series/edit/{id}', 'edit')->name('series.edit')->whereNumber('id')->middleware('autenticador');
+    Route::put('/series/update/{id}', 'update')->name('series.update')->whereNumber('id')->middleware('autenticador');
     Route::post('/series', 'store')->name('series.store')->middleware('autenticador');
-    Route::delete('/series/destroy/{id}', 'destroy')->name('series.destroy')->whereNumber('id', '[0-9]+')->middleware('autenticador');
+    Route::delete('/series/destroy/{id}', 'destroy')->name('series.destroy')->whereNumber('id')->middleware('autenticador');
 });
 
 Route::controller(App\Http\Controllers\temporadasController::class)->group(function (){
-    Route::get('/series/{id}/temporadas', 'index')->name('temporadas.index')->whereNumber('id', '[0-9]+')->middleware('autenticador');
+    Route::get('/series/{id}/temporadas', 'index')->name('temporadas.index')->whereNumber('id')->middleware('autenticador');
 });
 
 Route::controller(App\Http\Controllers\episodiosController::class)->group(function (){
-    Route::get('/temporada/{id}/episodios', 'index')->name('episodios.index')->whereNumber('id', '[0-9]+')->middleware('autenticador');
-    Route::post('/temporada/{id}/assistido', 'assistido')->name('episodios.assistido')->whereNumber('id', '[0-9]+')->middleware('autenticador');
+    Route::get('/temporada/{id}/episodios', 'index')->name('episodios.index')->whereNumber('id')->middleware('autenticador');
+    Route::post('/temporada/{id}/assistido', 'assistido')->name('episodios.assistido')->whereNumber('id')->middleware('autenticador');
 });
 
 Route::controller(App\Http\Controllers\loginController::class)->group(function (){
