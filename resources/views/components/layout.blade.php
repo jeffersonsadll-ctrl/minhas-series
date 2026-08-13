@@ -7,7 +7,15 @@
     </head>
     <body class="bg-light">
         <main class="container py-4">
-            <h1 class="mb-4">{{ $titleProcessada ?? '' }}</h1>
+            <h1 class="mb-4">
+                {{ $titleProcessada ?? '' }}
+                @if( Auth::check() )
+                    <div class="mb-4 float-end mt-4">
+                        <a href="{{ route('login.deslogar') }}" class="btn btn-danger">Sair</a>
+                    </div>
+                @endif
+            </h1>
+
 
             @if( isset($mensagem) )
                 <div class="alert alert-success">
