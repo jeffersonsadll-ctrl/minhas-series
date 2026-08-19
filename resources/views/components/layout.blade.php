@@ -9,11 +9,16 @@
         <main class="container py-4">
             <h1 class="mb-4">
                 {{ $titleProcessada ?? '' }}
-                @if( Auth::check() )
+                @auth
                     <div class="mb-4 float-end mt-4">
                         <a href="{{ route('login.deslogar') }}" class="btn btn-danger">Sair</a>
                     </div>
-                @endif
+                @endauth
+                @guest
+                    <div class="mb-4 float-end mt-4">
+                        <a href="{{ route('login.index') }}" class="btn btn-primary">Entrar</a>
+                    </div>
+                @endguest
             </h1>
 
 
