@@ -27,3 +27,10 @@ Route::middleware('autenticador')->group(function () {
     Route::get('/temporada/{id}/episodios', [App\Http\Controllers\episodiosController::class, 'index'])->name('episodios.index')->whereNumber('id');
     Route::post('/temporada/{id}/assistido', [App\Http\Controllers\episodiosController::class, 'assistido'])->name('episodios.assistido')->whereNumber('id');
 });
+
+Route::get('/email', fn () => new App\Mail\SerieCriada(
+    1,
+    'Nome da Série',
+    3,
+    10
+));

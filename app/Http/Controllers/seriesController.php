@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SerieCriada;
 use App\Repositories\SeriesInterface;
 use App\Http\Requests\SeriesFormRequest;
 use App\Models\Series;
+use App\Models\User;
 
 class seriesController extends Controller
 {
@@ -45,6 +48,19 @@ class seriesController extends Controller
     public function store(SeriesFormRequest $request)
     {
         $serie = $this->repository->add($request);
+
+        $listaUsuarios = User::all();
+        // enviar email para usuario logado
+        foreach ($listaUsuarios as $usuario) {
+            Mail::to($usuario)->send(new SerieCriada(
+                $serie->id,
+                $serie->title,
+                $request->input('temporadas'),
+                $request->input('episodios')
+            ));    
+            
+            sleep(10); // Adiciona um atraso de 3 segundos entre os envios
+        }
 
         if( $serie ) {
             return redirect()->route('series.index');
