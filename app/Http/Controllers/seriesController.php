@@ -9,6 +9,7 @@ use App\Repositories\SeriesInterface;
 use App\Http\Requests\SeriesFormRequest;
 use App\Models\Series;
 use App\Models\User;
+use App\Events\SerieCriada as SerieCriadaEvent;
 
 class seriesController extends Controller
 {
@@ -49,18 +50,12 @@ class seriesController extends Controller
     {
         $serie = $this->repository->add($request);
 
-        $listaUsuarios = User::all();
-        // enviar email para usuario logado
-        foreach ($listaUsuarios as $usuario) {
-            Mail::to($usuario)->send(new SerieCriada(
-                $serie->id,
-                $serie->title,
-                $request->input('temporadas'),
-                $request->input('episodios')
-            ));    
-            
-            sleep(10); // Adiciona um atraso de 3 segundos entre os envios
-        }
+        SerieCriadaEvent::dispatch(
+            $serie->id,
+            $serie->title,
+            $request->input('temporadas'),
+            $request->input('episodios')
+        );
 
         if( $serie ) {
             return redirect()->route('series.index');
