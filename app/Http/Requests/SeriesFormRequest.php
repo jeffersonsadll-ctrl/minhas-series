@@ -28,7 +28,24 @@ class SeriesFormRequest extends FormRequest
                 'min:3',
                 'string',
                 'max:255'
-            ]
+            ],
+            'capa' => [
+                'nullable',
+                'image',
+                'mimes:jpeg,png'
+            ],
+            'temporadas' => [
+                $this->isMethod('post') ? 'required' : 'sometimes',
+                'integer',
+                'min:1',
+                'max:255',
+            ],
+            'episodios' => [
+                $this->isMethod('post') ? 'required' : 'sometimes',
+                'integer',
+                'min:1',
+                'max:255',
+            ],
         ];
     }
 }

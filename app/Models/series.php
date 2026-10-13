@@ -13,6 +13,7 @@ class Series extends Model
 
     protected $fillable = [
         'title',
+        'capa'
     ];
 
     public function temporadas()

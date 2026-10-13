@@ -10,19 +10,22 @@ use App\Models\Series;
 class SeriesRepository implements SeriesInterface
 {
 
-  public function add(SeriesFormRequest $request): Series{
+  public function add(SeriesFormRequest $request): ?Series{
 
     try{
 
         DB::beginTransaction();
-        $serie = Series::create($request->all());
+        $serie = Series::create([
+            'title' => $request->input('title'),
+            'capa' => $request->input('capa'),
+        ]);
 
-        for( $i = 1; $i <= $request->temporadas; $i++ ) {
+        for( $i = 1; $i <= (int) $request->input('temporadas'); $i++ ) {
             $temporada = $serie->temporadas()->create([
                 'numero_temporada' => $i
             ]);
 
-            for( $j = 1; $j <= $request->episodios; $j++ ) {
+            for( $j = 1; $j <= (int) $request->input('episodios'); $j++ ) {
                 $temporada->episodios()->create([
                     'numero_episodio' => $j,
                     'descricao' => "Episódio {$j} da temporada {$i}"

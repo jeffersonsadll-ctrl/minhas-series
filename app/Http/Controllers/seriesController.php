@@ -10,6 +10,7 @@ use App\Http\Requests\SeriesFormRequest;
 use App\Models\Series;
 use App\Models\User;
 use App\Events\SerieCriada as SerieCriadaEvent;
+use Illuminate\Support\Facades\Storage;
 
 class seriesController extends Controller
 {
@@ -24,7 +25,7 @@ class seriesController extends Controller
     public function index(Request $request)
     {
         $listSeries = Series::query()
-            ->select('title', 'id')
+            ->select('title', 'id', 'capa')
             ->orderBy('title', 'asc')
             ->get();
 
@@ -48,20 +49,29 @@ class seriesController extends Controller
      */
     public function store(SeriesFormRequest $request)
     {
+        // caso nao tenha imagem, usar default que esta em public sem-foto.jpg
+        $capaPath = $request->file('capa')?->store('capas', 'public');
+        $request->merge(['capa' => $capaPath]);
+
         $serie = $this->repository->add($request);
+
+        if (!$serie) {
+            if ($capaPath) {
+                Storage::disk('public')->delete($capaPath);
+            }
+
+            return redirect()->back()->withInput();
+        }
 
         SerieCriadaEvent::dispatch(
             $serie->id,
             $serie->title,
-            $request->input('temporadas'),
-            $request->input('episodios')
+            $serie->capa,
+            (int) $request->input('temporadas'),
+            (int) $request->input('episodios')
         );
 
-        if( $serie ) {
-            return redirect()->route('series.index');
-        } else {
-            return redirect()->back()->withInput();
-        }
+        return redirect()->route('series.index');
     }
 
     /**
@@ -97,7 +107,23 @@ class seriesController extends Controller
             return redirect()->route('series.index');
         }
 
-        $serie->update($request->all());
+        $dados = $request->safe()->only(['title']);
+        $capaAntiga = $serie->capa;
+        $capaNova = null;
+
+        if ($request->hasFile('capa')) {
+            $capaNova = $request->file('capa')->store('capas', 'public');
+
+            if( $capaNova !== false ) {
+                $dados['capa'] = $capaNova;
+            }
+        }
+
+        $serie->update($dados);
+
+        if ($capaNova !== null && $capaAntiga) {
+            Storage::disk('public')->delete($capaAntiga);
+        }
 
         $request->session()->flash('message.success', "Série '{$serie->title}' atualizada com sucesso!");
 
@@ -110,6 +136,12 @@ class seriesController extends Controller
     public function destroy(int $id, Request $request)
     {
         try{
+
+            // deletar capa da série antes de remover o registro
+            $serie = Series::find($id);
+            if ($serie && $serie->capa) {
+                Storage::disk('public')->delete($serie->capa);
+            }
 
             Series::destroy($id);    
 

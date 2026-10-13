@@ -12,6 +12,8 @@
     <ul class="list-group">
         @foreach ($listSeries as $serie)
             <li class="list-group-item d-flex justify-content-between align-items-center">
+                <img src="{{ $serie->capa ? asset('storage/' . $serie->capa) : asset('storage/sem-foto.jpg') }}" 
+                alt="Capa da Série {{ $serie->title }}" class="me-2" style="height: 50px;">
                 <a href="{{ route('temporadas.index', $serie->id) }}">
                     {{ $serie->title }}
                 </a>

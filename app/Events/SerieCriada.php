@@ -20,6 +20,7 @@ class SerieCriada
     public function __construct(
         public readonly string $id,
         public readonly string $title,
+        public readonly ?string $capa,
         public readonly int $temporadas,
         public readonly int $episodios
     )
@@ -39,3 +40,4 @@ class SerieCriada
         ];
     }
 }
+            
