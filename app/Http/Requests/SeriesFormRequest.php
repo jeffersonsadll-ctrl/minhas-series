@@ -34,6 +34,10 @@ class SeriesFormRequest extends FormRequest
                 'image',
                 'mimes:jpeg,png'
             ],
+            'capaPath' => [
+                'string',
+                'nullable'
+            ],
             'temporadas' => [
                 $this->isMethod('post') ? 'required' : 'sometimes',
                 'integer',
