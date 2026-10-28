@@ -33,13 +33,18 @@ class SeriesRepository implements SeriesInterface
             }
         }
 
-        $request->session()->flash('message.success', "Série '{$serie->title}' adicionada com sucesso!");
+        // se for api, não usar session
         DB::commit();
+
+        if(!request()->wantsJson())
+            $request->session()->flash('message.success', "Série '{$serie->title}' adicionada com sucesso!");
 
     }catch(\Exception $e) {
 
         DB::rollBack();
-        $request->session()->flash('message.error', "Erro ao adicionar a série: {$e->getMessage()}");
+
+        if(!request()->wantsJson())
+            $request->session()->flash('message.error', "Erro ao adicionar a série: {$e->getMessage()}");
         $serie = null;
     }
 

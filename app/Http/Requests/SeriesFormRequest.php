@@ -31,8 +31,9 @@ class SeriesFormRequest extends FormRequest
             ],
             'capa' => [
                 'nullable',
-                'image',
-                'mimes:jpeg,png'
+                ...($this->hasFile('capa')
+                    ? ['image', 'mimes:jpeg,png']
+                    : ['string']),
             ],
             'capaPath' => [
                 'string',
