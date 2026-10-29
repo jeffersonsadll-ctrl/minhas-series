@@ -16,6 +16,11 @@ class Series extends Model
         'capa'
     ];
 
+    public function episodios()
+    {
+        return $this->hasManyThrough(Episodios::class, Temporadas::class);
+    }
+
     public function temporadas()
     {
         return $this->hasMany(Temporadas::class, 'series_id');

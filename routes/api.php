@@ -9,3 +9,5 @@ Route::get('/user', function (Request $request) {
 
 Route::apiResource('series', \App\Http\Controllers\Api\SeriesController::class);
 Route::post('capaUpload', [\App\Http\Controllers\Api\SeriesController::class, 'capaUpload']);
+Route::get('series/{id}/temporadas', [\App\Http\Controllers\Api\TemporadasController::class, 'index']);
+Route::get('series/{id}/episodios', [\App\Http\Controllers\Api\EpisodiosController::class, 'index']);
