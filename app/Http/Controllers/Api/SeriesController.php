@@ -13,9 +13,16 @@ class SeriesController extends Controller
   public function __construct(private SeriesRepository $seriesRepository) {
   }
 
-  public function index()
+  public function index(Request $request)
   {
-    return series::all()->sortByDesc('id');
+
+    $query = series::query();
+
+    if( $request->has("title") ){
+      $query->where("title", "like", "%{$request->title}%");
+    }
+
+    return $query->paginate(5);
   }
 
   public function show(int $id)
