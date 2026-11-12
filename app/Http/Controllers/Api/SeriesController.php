@@ -7,6 +7,7 @@ use App\Http\Requests\SeriesFormRequest;
 use App\Repositories\SeriesRepository;
 use Illuminate\Http\Request;
 use App\Models\series;
+use App\Http\Resources\SeriesResource;
 
 class SeriesController extends Controller
 {
@@ -22,13 +23,13 @@ class SeriesController extends Controller
       $query->where("title", "like", "%{$request->title}%");
     }
 
-    return $query->paginate(5);
+    return SeriesResource::collection($query->paginate(5));
   }
 
   public function show(int $id)
   {
     $serie = series::with('temporadas.episodios')->findOrFail($id);
-    return $serie;
+    return new SeriesResource($serie);
   }
 
   public function store(SeriesFormRequest $request)
@@ -36,14 +37,16 @@ class SeriesController extends Controller
     // se existir capaPath, adicionar no lugar do capa
     if($request->capaPath) $request->merge(['capa' => $request->capaPath]);
 
-    return $this->seriesRepository->add($request);
+    $serie = $this->seriesRepository->add($request);
+
+    return $serie ? new SeriesResource($serie) : response()->json(['message' => 'Não foi possível criar a série.'], 500);
   }
 
   public function update(SeriesFormRequest $request, $id)
   {
     $serie = series::findOrFail($id);
     $serie->update($request->all());
-    return $serie;
+    return new SeriesResource($serie);
   }
 
   public function destroy($id)

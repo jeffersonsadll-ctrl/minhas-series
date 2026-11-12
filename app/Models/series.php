@@ -9,6 +9,7 @@ class Series extends Model
 {
     use HasFactory;
 
+
     protected $table = 'series';
 
     protected $fillable = [
@@ -25,4 +26,5 @@ class Series extends Model
     {
         return $this->hasMany(Temporadas::class, 'series_id');
     }
+
 }
