@@ -16,7 +16,7 @@ class SeriesController extends Controller
 
   public function index(Request $request)
   {
-
+    
     $query = series::query();
 
     if( $request->has("title") ){

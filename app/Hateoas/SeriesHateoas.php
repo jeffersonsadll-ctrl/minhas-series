@@ -12,7 +12,7 @@ class SeriesHateoas
 
     public function self(Series $series) : ?Link
     {
-        return $this->link('series.show', ['series' => $series->id]);
+        return $this->link('api.series.show', ['series' => $series->id]);
     }
 
     public function temporadas(Series $series) : ?Link
